@@ -173,7 +173,6 @@ size_t sp_buff_target;
 
 ### 类
 ```cpp
-using Skill = std::pair<std::function<void(size_t)>, size_t>;
 class CardBase
 {
 public:

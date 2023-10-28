@@ -1,0 +1,34 @@
+
+name: test_card_00
+type: normal
+description: test_description_00
+cost: 1
+damage: 100%
+buff_num: 0
+---
+
+
+
+###################################
+# 卡片信息
+# 结构
+# 基础信息 名称, 类型, 描述, 费用 (必填)
+# 伤害信息
+# buff信息
+# 特殊技能信息
+# 结束符 (必填)
+###################################
+# 填写示例
+# name: 名称
+# type: 类型 (normal, special, venue)
+# description: 描述
+# cost: 费用
+# damage: 伤害效果 (x / x%)
+# buff_num: buff技能数量
+# buff_id: buff技能id
+# buff_duration: buff技能持续回合
+# buff_time: buff技能触发次数
+# sp_id: sp技能id
+# sp_target: sp技能目标(buff_id)
+# --- 卡片信息结束指引
+###################################
