@@ -42,7 +42,7 @@ public:
 	{
 		using std::cout;
 		using std::endl;
-		cout << "\n***DEBUG***\n";
+		cout << "***DEBUG***\n";
 		cout << "card name: " << name << endl;
 		cout << "cost: " << cost << endl;
 		cout << "type: ";
@@ -231,6 +231,7 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 			if (str == "sp_target:")
 			{
 				sp.SetTarget(stoi(str));
+				file >> str;
 			}
 			else if (str == "---")
 			{

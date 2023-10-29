@@ -9,8 +9,8 @@
 
 int main()
 {
-	auto cards = CardLoader::Instance().LoadCard("I:/TanmiGames/cpp/CardsFight/data/cards.txt");
-	std::cout << cards.size();
+	auto cards = CardLoader::Instance()
+		.LoadCard("I:/TanmiGames/cpp/CardsFight/data/cards.txt");
 	cards[0].DebugPrint();
 	return 0;
 }

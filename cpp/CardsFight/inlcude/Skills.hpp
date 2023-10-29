@@ -8,11 +8,7 @@
 #pragma once
 #ifndef _TANMI_SKILLS_
 #define _TANMI_SKILLS_
-
-class Player
-{
-
-};
+#include"Player.hpp"
 
 class Skill 
 {

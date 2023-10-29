@@ -21,6 +21,12 @@
     <ClInclude Include="..\CardsFight\inlcude\Skills.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\CardsFight\inlcude\Player.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CardsFight\inlcude\Buffs.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CardsFight\src\Main.cpp">

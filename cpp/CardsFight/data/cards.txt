@@ -29,6 +29,6 @@ buff_num: 0
 # buff_duration: buff技能持续回合
 # buff_time: buff技能触发次数
 # sp_id: sp技能id
-# sp_target: sp技能目标(buff_id)
+# sp_target: sp技能目标(buff_id)或sp技能触发次数
 # --- 卡片信息结束指引
 ###################################
