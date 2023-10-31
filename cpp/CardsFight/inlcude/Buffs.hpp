@@ -14,7 +14,6 @@ enum Buff
 	Melody,         // 提升6%造成的伤害/层
 	Healing,        // 恢复50生命值/层
 	Abundance,      // 提升25生命上限/层
-	Barrier,        // 获得50生命值护盾/层
 	Resilience,     // 提升1点防御/层
 	Purification,   // 抵消1个最新debuff/层, 抵消1次控制/10层
 	BuffNum
@@ -41,6 +40,7 @@ enum Effect
 {
 	Mana,			// 消耗以提升卡牌效果
 	Wealth,			// 造成1-6点追加伤害/层
+	Barrier,        // 获得1生命值护盾/层
 	Counterattack,  // 护盾受到伤害时, 立即造成100%攻击力伤害
 	Summon,			// 获得召唤物, 拥有本体50%攻击力, 召唤物造成的伤害视为追加伤害
 	Charge,			// 记录倒计时5次, 回合结束时减少1次, 倒计时结束时造成50%攻击力伤害
