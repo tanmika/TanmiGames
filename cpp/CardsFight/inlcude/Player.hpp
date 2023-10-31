@@ -11,6 +11,7 @@
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
+#include "Buffs.hpp"
 using std::vector;
 using std::pair;
 class Player;
@@ -34,14 +35,15 @@ public:
 		return num;
 	}
 private:
-	Player* player;
-	size_t num;
+	Player* player = nullptr;
+	size_t num = 0;
 };
 
 class BuffList
 {
 public:
-	BuffList(int max_round, vector<BuffBase>& buffs)
+	BuffList() = default;
+	void Ins(int max_round, vector<BuffBase>& buffs)
 	{
 		buffVec.resize(max_round +1);
 		for (auto& buff : buffs)
@@ -153,8 +155,16 @@ private:
 class EffectBase
 {
 public:
-	void Add(size_t);
-	bool Consume(size_t);
+	void Add(size_t n)
+	{
+		num += n;
+	}
+	bool Consume(size_t n)
+	{
+		if (num < n) return false;
+		num -= n;
+		return true;
+	}
 private:
 	size_t num;
 };
@@ -162,15 +172,24 @@ private:
 class Player
 {
 public:
-	Player();
-	~Player();
+	Player(int _hp, int _attack): base_hp(_hp), base_attack(_attack), total_hp(_hp), total_attack(_attack), 
+		shield(0), damageIncrease(0), damageReduction(0), enemy(nullptr)
+	{
+		buffs.resize(Buff::BuffNum);
+		buffList.Ins(5, buffs);
+		debuffs.resize(Debuff::DebuffNum);
+		debuffList.Ins(5, debuffs);
+		effects.resize(Effect::EffectNum);
+	}
+	~Player() = default;
 	void SetEnemy(Player* p)
 	{
 		enemy = p;
 	}
-	void Attack(size_t);
-	void AdditionAttack(size_t);
-	void Defend(size_t);
+	//待定
+	void Attack(size_t n);
+	void AdditionAttack(size_t n);
+	void Defend(size_t n);
 	void CalDamageIncrease();
 	void CalDamageReduction();
 	void Round();
@@ -186,7 +205,7 @@ private:
 	size_t shield;		//护盾
 
 	double damageIncrease;	//增伤总计
-	double demageReduction;	//减伤总计
+	double damageReduction;	//减伤总计
 private:
 	Player* enemy;
 	vector<BuffBase> buffs;
@@ -195,3 +214,50 @@ private:
 	BuffList debuffList;
 	vector<EffectBase> effects;
 };
+inline void Player::Attack(size_t n)
+{
+	CalDamageIncrease();
+	enemy->Defend((total_attack * n * damageIncrease) / 100);
+}
+
+inline void Player::AdditionAttack(size_t n)
+{
+	CalDamageIncrease();
+	enemy->Defend(n * damageIncrease);
+}
+
+inline void Player::Defend(size_t n)
+{
+	CalDamageReduction();
+	int damage = std::min(1, int((double)n * damageReduction));
+	if (shield > 0)
+	{
+		if (shield > damage)
+		{
+			shield -= damage;
+			return;
+		}
+		else
+		{
+			damage -= shield;
+			shield = 0;
+		}
+	}
+	if (total_hp > n)
+	{
+		total_hp -= n;
+		return;
+	}
+	else
+	{
+		total_hp = 0;
+	}
+}
+
+inline void Player::CalDamageIncrease()
+{
+	total_attack = base_attack * (1 + buffs[1].Sum() * 0.1f) + buffs[0].Sum();
+	damageIncrease = 1 + (0.06f * buffs[2].Sum());
+}
+
+

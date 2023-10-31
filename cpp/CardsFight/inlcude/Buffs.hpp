@@ -11,21 +11,21 @@ enum Buff
 {
 	Strength,       // 提升10攻击力/层
 	Excitement,     // 提升10%攻击力/层
-	Barrier,        // 获得50生命值护盾/层
+	Melody,         // 提升6%造成的伤害/层
 	Healing,        // 恢复50生命值/层
 	Abundance,      // 提升25生命上限/层
-	Purification,   // 抵消1个最新debuff/层, 抵消1次控制/10层
+	Barrier,        // 获得50生命值护盾/层
 	Resilience,     // 提升1点防御/层
-	Melody,         // 提升6%造成的伤害/层
+	Purification,   // 抵消1个最新debuff/层, 抵消1次控制/10层
 	BuffNum
 };
 enum Debuff
 {
-	Bleeding,		// 轮次结束时, 造成10点追加伤害/层
-	Vulnerability,  // 使受到的伤害提高5%/层
-	Fragility,		// 降低1点防御/层
 	Weakness,		// 使造成的伤害降低5%/层
 	Erosion,		// 减少对方3%生命上限/层
+	Vulnerability,  // 使受到的伤害提高5%/层
+	Fragility,		// 降低1点防御/层
+	Bleeding,		// 轮次结束时, 造成10点追加伤害/层
 	Fear,			// 清除一个最新buff/层
 	DebuffNum
 };
