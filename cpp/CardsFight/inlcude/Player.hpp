@@ -192,17 +192,19 @@ public:
 	void Defend(size_t n);
 	void CalDamageIncrease();
 	void CalDamageReduction();
-	void Round();
+	void Round(); // 回合结算发生于一方进入回合时
 public:
 	bool isAlive()const;
-	size_t GetHp()const;
+	size_t GetTotalHp(int change); // 计算并返回当前生命值上限
 private:
 	size_t base_hp;		//基础生命
 	size_t base_attack; //基础攻击
+	int defence;	//防御
 
 	size_t total_hp;	//综合生命
 	size_t total_attack;//综合攻击
 	size_t shield;		//护盾
+	size_t hp;			//当前生命
 
 	double damageIncrease;	//增伤总计
 	double damageReduction;	//减伤总计
@@ -243,21 +245,53 @@ inline void Player::Defend(size_t n)
 			shield = 0;
 		}
 	}
-	if (total_hp > n)
+	if (hp > damage)
 	{
-		total_hp -= n;
+		hp -= damage;
 		return;
 	}
 	else
 	{
-		total_hp = 0;
+		hp = 0;
 	}
 }
 
 inline void Player::CalDamageIncrease()
 {
-	total_attack = base_attack * (1 + buffs[1].Sum() * 0.1f) + buffs[0].Sum();
-	damageIncrease = 1 + (0.06f * buffs[2].Sum());
+	total_attack = base_attack * (1 + buffs[Buff::Excitement].Sum() * 0.1f) + 
+		buffs[Buff::Strength].Sum();
+	damageIncrease = (1 + (0.06f * buffs[Buff::Melody].Sum())) * 
+		std::pow(0.95f, debuffs[Debuff::Weakness].Sum());
 }
+
+inline void Player::CalDamageReduction()
+{
+	damageReduction = (1 + (0.05f * debuffs[Debuff::Vulnerability].Sum()));
+	defence = buffs[Buff::Resilience].Sum() - debuffs[Debuff::Fragility].Sum();
+	if (defence > 0)
+	{
+		damageReduction *= (20.0f / (20.0f + defence));
+	}
+	else
+	{
+		damageReduction *= (1 + 0.05f * defence);
+	}
+}
+
+inline size_t Player::GetTotalHp(int change) 
+{
+	if (change >= 0)
+	{
+		total_hp += change;
+		hp += change;
+	}
+	else
+	{
+		total_hp = std::max(1, (int)total_hp + change);
+		hp = std::min(hp, total_hp);
+	}
+	return total_hp;
+}
+
 
 
