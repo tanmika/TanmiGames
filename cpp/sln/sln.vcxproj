@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="..\CardsFight\inlcude\Buffs.hpp" />
     <ClInclude Include="..\CardsFight\inlcude\Cards.hpp" />
+    <ClInclude Include="..\CardsFight\inlcude\CardsLib.hpp" />
     <ClInclude Include="..\CardsFight\inlcude\Player.hpp" />
     <ClInclude Include="..\CardsFight\inlcude\Skills.hpp" />
   </ItemGroup>
