@@ -105,10 +105,9 @@ buff
 ```
 力量 提升10攻击力/层
 兴奋 提升10%攻击力/层
-壁垒 获得50生命值护盾/层
 治愈 恢复50生命值/层
 丰饶 提升25生命上限/层
-净化 抵消1个最新debuff/层, 抵消1次控制/10层
+净化 抵消1个最新debuff/层
 坚韧 提升1点防御/层
 乐符 提升6%造成的伤害/层
 ```
@@ -129,6 +128,7 @@ debuff
 效果
 ```
 法力 消耗以提升卡牌效果
+壁垒 获得50生命值护盾/层
 财富 造成1-6点追加伤害/层
 反击 护盾受到伤害时, 立即造成100%攻击力伤害
 召唤 获得召唤物, 拥有本体50%攻击力, 召唤物造成的伤害视为追加伤害
@@ -192,4 +192,22 @@ private:
 	std::string name;
 	std::string description;
 };
+```
+
+### 类拓扑关系
+```mermaid
+classDiagram
+class Buff_enum
+
+class BuffBase
+
+class BuffList
+
+class Player
+
+Buff_enum-->BuffList
+BuffBase-->BuffList
+
+Player<|--BuffList
+    
 ```
