@@ -40,7 +40,7 @@ private:
 	size_t pileCardsNum;//<ÅÆ¿âÉÏÏÞ(Êµ¼ÊÐè4±¶)
 	vector<pair<CardBase, bool>> cards;
 	vector<pair<CardBase*, int>> cardPile;
-	int leftCardsNum =0;//<ÅÆ¿âÊ£ÓàÅÆÊý
+	int leftCardsNum = 0;//<ÅÆ¿âÊ£ÓàÅÆÊý
 };
 
 inline void CardLib::Instance(size_t num)
@@ -53,7 +53,7 @@ inline void CardLib::Instance(size_t num)
 bool CardLib::addCard(size_t idx)
 {
 	if (!isIns)
-	{ 
+	{
 		std::cerr << "ÅÆ¿âÎ´³õÊ¼»¯\n";
 		return false;
 	}
@@ -86,7 +86,7 @@ inline void CardLib::removeCard(size_t idx)
 	leftCardsNum -= 4;
 	if (idx == 0 && cardPile.size() == 1) cardPile.pop_back();
 	auto card = cardPile[idx].first;
-	for (auto &e:cards)
+	for (auto& e : cards)
 	{
 		if (&e.first == card)
 		{
@@ -122,7 +122,7 @@ inline void CardLib::Shuffle()
 
 inline bool CardLib::Licensing(size_t num, vector<CardBase*>& cards)
 {
-	if(num<leftCardsNum)
+	if (num > leftCardsNum)
 		return false;
 	if (!cards.empty())
 		cards.clear();
@@ -169,12 +169,12 @@ inline bool CardLib::Empty() const
 	return cards.empty();
 }
 
-inline vector<pair<CardBase, bool>>*const CardLib::GetCardsInfo()
+inline vector<pair<CardBase, bool>>* const CardLib::GetCardsInfo()
 {
 	return &cards;
 }
 
-inline vector<pair<CardBase*, int>>*const CardLib::GetPileInfo()
+inline vector<pair<CardBase*, int>>* const CardLib::GetPileInfo()
 {
 	return &cardPile;
 }

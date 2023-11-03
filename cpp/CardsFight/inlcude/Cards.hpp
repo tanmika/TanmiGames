@@ -94,16 +94,22 @@ bool CardBase::isPlayCard(size_t cost)
 }
 void CardBase::ChangeCost(int num)
 {
-	cost += num;
+	cost = cost > -num ? cost + num : 0;
 }
 inline void CardBase::Play()
 {
 	if (specialSkill)
 	{
+#if _DEBUG
+		std::cout << "使用了特殊技\n";
+#endif
 		specialSkill->Play(1);
 	}
 	for (auto& e : skillList)
 	{
+#if _DEBUG
+		std::cout << "使用了普通技\n";
+#endif
 		e.second->Play(e.first);
 	}
 }
@@ -218,7 +224,8 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 				skill->SetAdditionalDamage(stoi(info.substr(0, found)));
 			else
 				skill->SetDirectDamage(stoi(info));
-			card.skillList.push_back(std::pair<size_t, Skill*>(1, skill));
+			file >> info;
+			card.skillList.push_back(std::pair<size_t, Skill*>(stoi(info), skill));
 			is_skill = true;
 		}
 		else if (str == "buff_num:")

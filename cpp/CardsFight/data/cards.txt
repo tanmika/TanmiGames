@@ -3,7 +3,7 @@ name: test_card_00
 type: normal
 description: test_description_00
 cost: 1
-damage: 100%
+damage: 100% 1
 buff_num: 0
 ---
 
@@ -23,7 +23,7 @@ buff_num: 0
 # type: 类型 (normal, special, venue)
 # description: 描述
 # cost: 费用
-# damage: 伤害效果 (x / x%)
+# damage: 伤害效果 (x / x%) 次数
 # buff_num: buff技能数量
 # buff_id: buff技能id
 # buff_duration: buff技能持续回合

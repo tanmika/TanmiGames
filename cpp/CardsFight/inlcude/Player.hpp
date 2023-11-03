@@ -1,7 +1,7 @@
 /*****************************************************************//**
  * @file   Player.hpp
  * @brief  玩家相关
- * 
+ *
  * @author tanmi
  * @date   October 2023
  *********************************************************************/
@@ -45,19 +45,19 @@ public:
 	BuffList() = default;
 	void Ins(int max_round, vector<BuffBase>& buffs)
 	{
-		buffVec.resize(max_round +1);
+		buffVec.resize(max_round + 1);
 		for (auto& buff : buffs)
-			for (auto e: buffVec)
+			for (auto e : buffVec)
 			{
 				e = new vector<pair<BuffBase*, size_t>>;
 				e->push_back(pair<BuffBase*, size_t>(&buff, 0));
 			}
-		buffSet.resize(max_round +1);
+		buffSet.resize(max_round + 1);
 		for (auto e : buffSet)
 			e = new std::unordered_set<size_t>;
 	}
 	~BuffList() = default;
-	void AddBuff(size_t _id, size_t _time =1, size_t duration =0)
+	void AddBuff(size_t _id, size_t _time = 1, size_t duration = 0)
 	{
 		buffVec[duration]->at(_id).first->Add(_time);
 		buffVec[duration]->at(_id).second += _time;
@@ -84,13 +84,13 @@ public:
 		}
 		ptrSet->clear();
 		//消除效果
-		for (auto& e: *ptrVec)
+		for (auto& e : *ptrVec)
 		{
 			e.first->Sub(e.second);
 			e.second = 0;
 		}
 		//其余buff回合数减1
-		for (auto i = 1; i < buffVec.size()-1; i++)
+		for (auto i = 1; i < buffVec.size() - 1; i++)
 		{
 			buffVec[i] = buffVec[i + 1];
 			buffSet[i] = buffSet[i + 1];
@@ -125,7 +125,7 @@ public:
 	void RemoveRamdon()
 	{
 		auto it = buffMap.begin();
-		auto num = rand() %( buffMap.size()-1);
+		auto num = rand() % (buffMap.size() - 1);
 		while (num--)
 			it++;
 		for (int i = 1; i < buffSet.size(); i++)
@@ -138,16 +138,15 @@ public:
 				return;
 			}
 		}
-
 	}
 private:
 	size_t GetId()
 	{
-		static size_t id=0;
+		static size_t id = 0;
 		return id++;
 	}
 private:
-	vector<vector<pair<BuffBase*,size_t>>*> buffVec;//(回合, (buff索引id, (buff 类, 次数)))
+	vector<vector<pair<BuffBase*, size_t>>*> buffVec;//(回合, (buff索引id, (buff 类, 次数)))
 	vector<std::unordered_set<size_t>*> buffSet;//(回合, (本buff id))
 	std::unordered_map<size_t, size_t> buffMap;//(本buff id, buff索引id)
 };
@@ -166,20 +165,20 @@ public:
 		return true;
 	}
 private:
-	size_t num;
+	size_t num = 0;
 };
 
 class Player
 {
 public:
-	Player(int _hp, int _attack): base_hp(_hp), base_attack(_attack), total_hp(_hp), total_attack(_attack), 
+	Player(int _hp, int _attack) : base_hp(_hp), base_attack(_attack), total_hp(_hp), total_attack(_attack), hp(_hp), defence(0),
 		shield(0), damageIncrease(0), damageReduction(0), enemy(nullptr)
 	{
-		buffs.resize(Buff::BuffNum);
+		buffs.resize(Buff::BuffNum, BuffBase());
 		buffList.Ins(5, buffs);
-		debuffs.resize(Debuff::DebuffNum);
+		debuffs.resize(Debuff::DebuffNum, BuffBase());
 		debuffList.Ins(5, debuffs);
-		effects.resize(Effect::EffectNum);
+		effects.resize(Effect::EffectNum, EffectBase());
 	}
 	~Player() = default;
 	void SetEnemy(Player* p)
@@ -197,6 +196,18 @@ public:
 	bool isAlive()const;
 	size_t GetTotalHp(int change, bool revover = true); // 计算并返回当前生命值上限
 	void Heal(size_t);
+	size_t GetHp()const
+	{
+		return hp;
+	}
+	BuffList* GetBuffListPtr()
+	{
+		return &buffList;
+	}
+	BuffList* GetDebuffListPtr()
+	{
+		return &debuffList;
+	}
 private:
 	size_t base_hp;		//基础生命
 	size_t base_attack; //基础攻击
@@ -261,9 +272,9 @@ inline void Player::Defend(size_t n)
 
 inline void Player::CalDamageIncrease()
 {
-	total_attack = base_attack * (1 + buffs[Buff::Excitement].Sum() * 0.1f) + 
+	total_attack = base_attack * (1 + buffs[Buff::Excitement].Sum() * 0.1f) +
 		buffs[Buff::Strength].Sum();
-	damageIncrease = (1 + (0.06f * buffs[Buff::Melody].Sum())) * 
+	damageIncrease = (1 + (0.06f * buffs[Buff::Melody].Sum())) *
 		std::pow(0.95f, debuffs[Debuff::Weakness].Sum());
 }
 
@@ -304,7 +315,7 @@ inline size_t Player::GetTotalHp(int change, bool recover)
 	if (change >= 0)
 	{
 		total_hp += change;
-		if(recover)
+		if (recover)
 			hp += change;
 	}
 	else
@@ -319,6 +330,3 @@ inline void Player::Heal(size_t _hp)
 {
 	hp = std::min(total_hp, hp + _hp);
 }
-
-
-
