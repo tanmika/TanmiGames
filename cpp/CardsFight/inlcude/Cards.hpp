@@ -87,6 +87,12 @@ inline void CardBase::Instance(Player* player, Player* enemy)
 {
 	this->player = player;
 	this->enemy = enemy;
+	if (specialSkill)
+		specialSkill->SetTarget(player, enemy);
+	for (auto& e:skillList)
+	{
+		e.second->SetTarget(player, enemy);
+	}
 }
 bool CardBase::isPlayCard(size_t cost)
 {
