@@ -33,6 +33,8 @@ public:
 	bool EmptyPile()const;
 	void Clear();
 	bool Empty()const;
+	vector<pair<CardBase, bool>>* const GetCardsInfo();
+	vector<pair<CardBase*, int>>* const GetPileInfo();
 private:
 	bool isIns = false;
 	size_t pileCardsNum;//<牌库上限(实际需4倍)
@@ -165,4 +167,14 @@ inline void CardLib::Clear()
 inline bool CardLib::Empty() const
 {
 	return cards.empty();
+}
+
+inline vector<pair<CardBase, bool>>*const CardLib::GetCardsInfo()
+{
+	return &cards;
+}
+
+inline vector<pair<CardBase*, int>>*const CardLib::GetPileInfo()
+{
+	return &cardPile;
 }

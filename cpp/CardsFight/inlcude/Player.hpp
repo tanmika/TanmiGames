@@ -195,7 +195,7 @@ public:
 	void Round(); // 回合结算发生于一方进入回合时
 public:
 	bool isAlive()const;
-	size_t GetTotalHp(int change, bool revover); // 计算并返回当前生命值上限
+	size_t GetTotalHp(int change, bool revover = true); // 计算并返回当前生命值上限
 	void Heal(size_t);
 private:
 	size_t base_hp;		//基础生命
@@ -299,7 +299,7 @@ inline bool Player::isAlive() const
 	return hp > 0;
 }
 
-inline size_t Player::GetTotalHp(int change, bool recover = true)
+inline size_t Player::GetTotalHp(int change, bool recover)
 {
 	if (change >= 0)
 	{
