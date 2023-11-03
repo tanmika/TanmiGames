@@ -30,13 +30,26 @@ public:
 		name(_name), active(true), cost(0), type(CardType::normal), specialSkill(nullptr), description("")
 	{}
 	~CardBase() = default;
-	bool isPlayCard(size_t cost);
-	void ChangeCost(int num);
-	void Play();
-	const std::string& GetName();
-	const std::string& GetDescription();
-	void Active(bool);
-	bool isActive();
+	void Instance(Player* player, Player* enemy);
+	bool isPlayCard(size_t cost);//<是否可使用
+	void ChangeCost(int num);//<改变费用
+	void Play();//<使用卡牌
+	std::string GetName()const
+	{
+		return name;
+	}
+	std::string GetDescription()const
+	{
+		return description;
+	}
+	void Active(bool b)
+	{
+		active = b;
+	}
+	bool isActive() const
+	{
+		return active;
+	}
 #if _DEBUG
 	void DebugPrint()
 	{
@@ -60,6 +73,8 @@ public:
 #endif // _DEBUG
 
 private:
+	Player* player;
+	Player* enemy;
 	size_t cost;
 	CardType type;
 	bool active;
@@ -68,7 +83,30 @@ private:
 	std::string name;
 	std::string description;
 };
-
+inline void CardBase::Instance(Player* player, Player* enemy)
+{
+	this->player = player;
+	this->enemy = enemy;
+}
+bool CardBase::isPlayCard(size_t cost)
+{
+	return active && cost >= this->cost;
+}
+void CardBase::ChangeCost(int num)
+{
+	cost += num;
+}
+inline void CardBase::Play()
+{
+	if (specialSkill)
+	{
+		specialSkill->Play(1);
+	}
+	for (auto& e : skillList)
+	{
+		e.second->Play(e.first);
+	}
+}
 class CardFactory
 {
 public:

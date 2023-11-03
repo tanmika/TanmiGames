@@ -35,10 +35,10 @@ public:
 	bool Empty()const;
 private:
 	bool isIns = false;
-	size_t pileCardsNum;
+	size_t pileCardsNum;//<牌库上限(实际需4倍)
 	vector<pair<CardBase, bool>> cards;
 	vector<pair<CardBase*, int>> cardPile;
-	int leftCardsNum =0;
+	int leftCardsNum =0;//<牌库剩余牌数
 };
 
 inline void CardLib::Instance(size_t num)
@@ -51,7 +51,7 @@ inline void CardLib::Instance(size_t num)
 bool CardLib::addCard(size_t idx)
 {
 	if (!isIns)
-	{
+	{ 
 		std::cerr << "牌库未初始化\n";
 		return false;
 	}
@@ -83,6 +83,15 @@ inline void CardLib::removeCard(size_t idx)
 {
 	leftCardsNum -= 4;
 	if (idx == 0 && cardPile.size() == 1) cardPile.pop_back();
+	auto card = cardPile[idx].first;
+	for (auto &e:cards)
+	{
+		if (&e.first == card)
+		{
+			e.second = true;
+			break;
+		}
+	}
 	for (size_t i = idx; i < cardPile.size() - 1; i++)
 	{
 		cardPile[i] = cardPile[i + 1];
@@ -134,5 +143,26 @@ inline bool CardLib::Licensing(size_t num, vector<CardBase*>& cards)
 
 inline void CardLib::ClearPile()
 {
+	while (!EmptyPile())
+	{
+		removeCard(cardPile.size() - 1);
+	}
+	leftCardsNum = 0;
+}
 
+inline bool CardLib::EmptyPile() const
+{
+	return cardPile.empty();
+}
+
+inline void CardLib::Clear()
+{
+	if (leftCardsNum != 0)
+		cardPile.clear(), leftCardsNum = 0;
+	cards.clear();
+}
+
+inline bool CardLib::Empty() const
+{
+	return cards.empty();
 }
