@@ -29,6 +29,9 @@ public:
 	void removeCard(size_t idx);
 	void Shuffle();
 	bool Licensing(size_t num, vector<CardBase*>& cards);
+#if _DEBUG
+	bool DebugLicensing(size_t num, vector<CardBase*>& cards, vector<size_t> id);
+#endif
 	void ClearPile();
 	bool EmptyPile()const;
 	void Clear();
@@ -142,6 +145,30 @@ inline bool CardLib::Licensing(size_t num, vector<CardBase*>& cards)
 	}
 	return true;
 }
+#if _DEBUG
+inline bool CardLib::DebugLicensing(size_t num, vector<CardBase*>& cards, vector<size_t> id)
+{
+	if (num > leftCardsNum)
+		return false;
+	if (!cards.empty())
+		cards.clear();
+	srand((unsigned)time(0));
+	for (size_t i = 0; i < num; i++)
+	{
+		int c = id[i];
+		while (cardPile[c].second == 0)
+		{
+			c++;
+			if (c == cards.size())
+				c = 0;
+		}
+		cards.push_back(cardPile[c].first);
+		cardPile[c].second--;
+		leftCardsNum--;
+	}
+	return true;
+}
+#endif
 
 inline void CardLib::ClearPile()
 {

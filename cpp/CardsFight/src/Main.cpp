@@ -17,6 +17,7 @@ int main()
 	std::cout << "//-----------×ÜÅÆ¿â------------//\n";
 	for (auto& e : *cardLib1)
 		std::cout << e.first.GetName() << ": " << e.first.GetDescription() << std::endl;
+	lib1.addCard(2);
 	lib1.addCard(0);
 	auto cardPile = lib1.GetPileInfo();
 	std::cout << "//-----------ÅÆ¿â------------//\n";
@@ -34,11 +35,17 @@ int main()
 	std::cout << "player2 hp:" << p2.GetHp () << std::endl;
 	std::cout << "//------------»ØºÏ------------//\n";
 	{
+		std::vector<size_t> id = { 0, 1 };
 		std::vector<CardBase*> cardsListening;
-		if (!lib1.Licensing(1, cardsListening))
+		if (!lib1.DebugLicensing(2, cardsListening, id))
 			return 0;
+		std::cout<<cardsListening[0]->GetName()<<std::endl;
 		cardsListening[0]->Instance(&p1, &p2);
 		cardsListening[0]->Play();
+		std::cout << cardsListening[1]->GetName() << std::endl;
+		cardsListening[1]->Instance(&p1, &p2);
+		cardsListening[1]->Play();
+		p1.DebugShowBuff();
 	}
 	std::cout << "player1 hp:" << p1.GetHp() << std::endl;
 	std::cout << "player2 hp:" << p2.GetHp () << std::endl;

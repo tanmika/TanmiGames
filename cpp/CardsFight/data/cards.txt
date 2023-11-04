@@ -1,12 +1,30 @@
 
-name: test_card_00
+name: test_attack_card_00
 type: normal
 description: test_description_00
 cost: 1
 damage: 100% 1
 buff_num: 0
 ---
-
+name: test_attack_card_01
+type: normal
+description: test_description_01
+cost: 1
+damage: 150 2
+buff_num: 0
+---
+name: test_buff_card_00
+type: normal
+description: test_description_02
+cost: 1
+buff_num: 2
+buff_id: 0
+buff_duration: 2
+buff_time: 1
+buff_id: 1
+buff_duration: 2
+buff_time: 1
+---
 
 
 ###################################

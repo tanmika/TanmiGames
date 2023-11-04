@@ -15,7 +15,7 @@ enum Buff
 	Healing,        // 恢复50生命值/层
 	Abundance,      // 提升25生命上限/层
 	Resilience,     // 提升1点防御/层
-	Purification,   // 抵消1个最新debuff/层, 抵消1次控制/10层
+	Purification,   // 抵消1个最新debuff/层, 抵消1次控制/10层 // 未完成
 	BuffNum
 };
 enum Debuff
@@ -25,7 +25,7 @@ enum Debuff
 	Vulnerability,  // 使受到的伤害提高5%/层
 	Fragility,		// 降低1点防御/层
 	Bleeding,		// 轮次结束时, 造成10点追加伤害/层
-	Fear,			// 清除一个最新buff/层
+	Fear,			// 清除一个最新buff/层  // 未完成
 	DebuffNum
 };
 

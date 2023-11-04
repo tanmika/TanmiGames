@@ -45,16 +45,18 @@ public:
 	BuffList() = default;
 	void Ins(int max_round, vector<BuffBase>& buffs)
 	{
-		buffVec.resize(max_round + 1);
-		for (auto& buff : buffs)
-			for (auto e : buffVec)
-			{
-				e = new vector<pair<BuffBase*, size_t>>;
+		for (int i = 0; i <= max_round; i++)
+		{
+			auto e = new vector<pair<BuffBase*, size_t>>;
+			for (auto& buff : buffs)
 				e->push_back(pair<BuffBase*, size_t>(&buff, 0));
-			}
-		buffSet.resize(max_round + 1);
-		for (auto e : buffSet)
-			e = new std::unordered_set<size_t>;
+			buffVec.push_back(e);
+		}
+		for (int i = 0; i <= max_round; i++)
+		{
+			auto e = new std::unordered_set<size_t>;
+			buffSet.push_back(e);
+		}
 	}
 	~BuffList() = default;
 	void AddBuff(size_t _id, size_t _time = 1, size_t duration = 0)
@@ -186,17 +188,17 @@ public:
 		enemy = p;
 	}
 	//待定
-	void Attack(size_t n);
-	void AdditionAttack(size_t n);
-	void Defend(size_t n);
+	void Attack(int n);
+	void AdditionAttack(int n);
+	void Defend(int n);
 	void CalDamageIncrease();
 	void CalDamageReduction();
 	void Round(); // 回合结算发生于一方进入回合时
 public:
 	bool isAlive()const;
-	size_t GetTotalHp(int change, bool revover = true); // 计算并返回当前生命值上限
-	void Heal(size_t);
-	size_t GetHp()const
+	int GetTotalHp(int change, bool revover = true); // 计算并返回当前生命值上限
+	void Heal(int);
+	int GetHp()const
 	{
 		return hp;
 	}
@@ -208,15 +210,16 @@ public:
 	{
 		return &debuffList;
 	}
+	void DebugShowBuff();
 private:
-	size_t base_hp;		//基础生命
-	size_t base_attack; //基础攻击
+	int base_hp;		//基础生命
+	int base_attack; //基础攻击
 	int defence;	//防御
 
-	size_t total_hp;	//综合生命
-	size_t total_attack;//综合攻击
-	size_t shield;		//护盾
-	size_t hp;			//当前生命
+	int total_hp;	//综合生命
+	int total_attack;//综合攻击
+	int shield;		//护盾
+	int hp;			//当前生命
 
 	double damageIncrease;	//增伤总计
 	double damageReduction;	//减伤总计
@@ -228,22 +231,22 @@ private:
 	BuffList debuffList;
 	vector<EffectBase> effects;
 };
-inline void Player::Attack(size_t n)
+inline void Player::Attack(int n)
 {
 	CalDamageIncrease();
 	enemy->Defend((total_attack * n * damageIncrease) / 100);
 }
 
-inline void Player::AdditionAttack(size_t n)
+inline void Player::AdditionAttack(int n)
 {
 	CalDamageIncrease();
 	enemy->Defend(n * damageIncrease);
 }
 
-inline void Player::Defend(size_t n)
+inline void Player::Defend(int n)
 {
 	CalDamageReduction();
-	int damage = std::min(1, int((double)n * damageReduction));
+	int damage = std::max(1, int((double)n * damageReduction));
 	if (shield > 0)
 	{
 		if (shield > damage)
@@ -273,7 +276,7 @@ inline void Player::Defend(size_t n)
 inline void Player::CalDamageIncrease()
 {
 	total_attack = base_attack * (1 + buffs[Buff::Excitement].Sum() * 0.1f) +
-		buffs[Buff::Strength].Sum();
+		buffs[Buff::Strength].Sum() * 10;
 	damageIncrease = (1 + (0.06f * buffs[Buff::Melody].Sum())) *
 		std::pow(0.95f, debuffs[Debuff::Weakness].Sum());
 }
@@ -310,7 +313,7 @@ inline bool Player::isAlive() const
 	return hp > 0;
 }
 
-inline size_t Player::GetTotalHp(int change, bool recover)
+inline int Player::GetTotalHp(int change, bool recover)
 {
 	if (change >= 0)
 	{
@@ -326,7 +329,18 @@ inline size_t Player::GetTotalHp(int change, bool recover)
 	return total_hp;
 }
 
-inline void Player::Heal(size_t _hp)
+inline void Player::Heal(int _hp)
 {
 	hp = std::min(total_hp, hp + _hp);
+}
+
+inline void Player::DebugShowBuff()
+{
+	std::cout << "Buff: ";
+	for (auto& i : buffs)
+		std::cout << i.Sum() << " ";
+	std::cout << std::endl << "Debuff: ";
+	for (auto& i : debuffs)
+		std::cout << i.Sum() << " ";
+	std::cout << std::endl;
 }

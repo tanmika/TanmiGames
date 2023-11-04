@@ -226,7 +226,7 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 			file >> info;
 			SkillDamage* skill = new SkillDamage();
 			size_t found = info.find_last_of("%");
-			if (found != string::npos)
+			if (found == string::npos)
 				skill->SetAdditionalDamage(stoi(info.substr(0, found)));
 			else
 				skill->SetDirectDamage(stoi(info));
