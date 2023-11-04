@@ -89,7 +89,7 @@ inline void CardBase::Instance(Player* player, Player* enemy)
 	this->enemy = enemy;
 	if (specialSkill)
 		specialSkill->SetTarget(player, enemy);
-	for (auto& e:skillList)
+	for (auto& e : skillList)
 	{
 		e.second->SetTarget(player, enemy);
 	}
@@ -217,21 +217,26 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 		}
 		else if (str == "cost:")
 		{
-			file >> info;
-			card.cost = stoi(info);
+			for (int i = 0; i < 3; i++)
+			{
+				file >> info;
+				card.cost = stoi(info);
+			}
 			is_cost = true;
 		}
 		else if (str == "damage:")
 		{
-			file >> info;
 			SkillDamage* skill = new SkillDamage();
-			size_t found = info.find_last_of("%");
-			if (found == string::npos)
-				skill->SetAdditionalDamage(stoi(info.substr(0, found)));
-			else
-				skill->SetDirectDamage(stoi(info));
-			file >> info;
-			card.skillList.push_back(std::pair<size_t, Skill*>(stoi(info), skill));
+			for (int i = 0; i < 3; i++)
+			{
+				file >> info;
+				size_t found = info.find_last_of("%");
+				if (found == string::npos)
+					skill->SetAdditionalDamage(stoi(info.substr(0, found)));
+				else
+					skill->SetDirectDamage(stoi(info));
+			}
+			card.skillList.push_back(std::pair<size_t, Skill*>(0, skill));
 			is_skill = true;
 		}
 		else if (str == "buff_num:")
@@ -252,13 +257,19 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 					}
 					else if (buffstr == "buff_duration:")
 					{
-						file >> buffstr;
-						buff->SetDuration(stoi(buffstr));
+						for (int i = 0; i < 3; i++)
+						{
+							file >> buffstr;
+							buff->SetDuration(stoi(buffstr));
+						}
 					}
 					else if (buffstr == "buff_time:")
 					{
-						file >> buffstr;
-						buff->SetTime(stoi(buffstr));
+						for (int i = 0; i < 3; i++)
+						{
+							file >> buffstr;
+							buff->SetTime(stoi(buffstr));
+						}
 					}
 					else
 					{
@@ -268,7 +279,7 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 					}
 				}
 				is_skill = true;
-				card.skillList.push_back(std::pair<size_t, Skill*>(1, buff));
+				card.skillList.push_back(std::pair<size_t, Skill*>(0, buff));
 			}
 		}
 		else if (str == "sp_id:")
@@ -281,8 +292,11 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 			file >> str;
 			if (str == "sp_target:")
 			{
-				sp.SetTarget(stoi(str));
-				file >> str;
+				for (int i = 0; i < 3; i++)
+				{
+					file >> str;
+					sp.SetTarget(stoi(str));
+				}
 			}
 			else if (str == "---")
 			{

@@ -9,7 +9,7 @@
 #ifndef _TANMI_SKILLS_
 #define _TANMI_SKILLS_
 #include"Player.hpp"
-
+using std::vector;
 class SkillExpection :public std::exception
 {
 public:
@@ -49,29 +49,27 @@ public:
 	void Play(size_t t)
 	{
 		isInstance();
-		while (t--)
+
+		if (directDamage.size() != 0)
 		{
-			if (directDamage != 0)
-			{
-				player->Attack(directDamage);
-			}
-			if (additionalDamage != 0)
-			{
-				player->Attack(additionalDamage);
-			}
+			player->Attack(directDamage[t]);
+		}
+		if (additionalDamage.size() != 0)
+		{
+			player->Attack(additionalDamage[t]);
 		}
 	}
 	void SetDirectDamage(size_t dmg)
 	{
-		directDamage = dmg;
+		directDamage.push_back(dmg);
 	}
 	void SetAdditionalDamage(size_t dmg)
 	{
-		additionalDamage = dmg;
+		additionalDamage.push_back(dmg);
 	}
 private:
-	size_t directDamage = 0;
-	size_t additionalDamage = 0;
+	vector<size_t> directDamage;
+	vector<size_t> additionalDamage;
 };
 
 class SkillBuff final :public Skill
@@ -85,11 +83,11 @@ public:
 
 		if (id < Buff::BuffNum)
 		{
-			player->GetBuffListPtr()->AddBuff(id, time, duration);
+			player->GetBuffListPtr()->AddBuff(id, time[t], duration[t]);
 		}
 		else
 		{
-			enemy->GetDebuffListPtr()->AddBuff(id, time, duration);
+			enemy->GetDebuffListPtr()->AddBuff(id, time[t], duration[t]);
 		}
 	}
 	void SetId(size_t _id)
@@ -98,16 +96,16 @@ public:
 	}
 	void SetDuration(size_t _dra)
 	{
-		duration = _dra;
+		duration.push_back(_dra);
 	}
 	void SetTime(size_t _t)
 	{
-		time = _t;
+		time.push_back(_t);
 	}
 private:
 	size_t id = 0;
-	size_t duration = 0;
-	size_t time = 0;
+	vector<size_t> duration;
+	vector<size_t> time;
 };
 class SkillSpecial final :public Skill
 {
@@ -125,11 +123,11 @@ public:
 	}
 	void SetTarget(size_t _buff)
 	{
-		target = _buff;
+		target.push_back(_buff);
 	}
 private:
 	size_t id = 0;
-	size_t target = 0;
+	vector<size_t> target;
 };
 
 #endif // !_TANMI_SKILLS_

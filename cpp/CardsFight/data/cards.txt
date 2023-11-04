@@ -2,28 +2,28 @@
 name: test_attack_card_00
 type: normal
 description: test_description_00
-cost: 1
-damage: 100% 1
+cost: 1 1 1 
+damage: 100% 150% 200%
 buff_num: 0
 ---
 name: test_attack_card_01
 type: normal
 description: test_description_01
-cost: 1
-damage: 150 2
+cost: 1 1 1
+damage: 150 200 300
 buff_num: 0
 ---
 name: test_buff_card_00
 type: normal
 description: test_description_02
-cost: 1
+cost: 1 1 1
 buff_num: 2
 buff_id: 0
-buff_duration: 2
-buff_time: 1
+buff_duration: 2 2 2
+buff_time: 1 2 4
 buff_id: 1
-buff_duration: 2
-buff_time: 1
+buff_duration: 2 2 2
+buff_time: 1 2 4
 ---
 
 
@@ -40,13 +40,13 @@ buff_time: 1
 # name: 名称
 # type: 类型 (normal, special, venue)
 # description: 描述
-# cost: 费用
-# damage: 伤害效果 (x / x%) 次数
-# buff_num: buff技能数量
+# cost: 0级费用 1级 2级
+# damage: 0级伤害效果 (x / x%) 1级 2级
+# buff_num: 0级buff技能数量 1级 2级
 # buff_id: buff技能id
-# buff_duration: buff技能持续回合
-# buff_time: buff技能触发次数
+# buff_duration: 0级buff技能持续回合 1级 2级
+# buff_time: 0级buff技能触发次数 1级 2级
 # sp_id: sp技能id
-# sp_target: sp技能目标(buff_id)或sp技能触发次数
+# sp_target: 0级sp技能目标(buff_id)或sp技能触发次数 1级 2级
 # --- 卡片信息结束指引
 ###################################
