@@ -27,7 +27,7 @@ class CardBase
 	friend class CardLoader;
 public:
 	CardBase(std::string _name) :
-		name(_name), active(true), cost(0), type(CardType::normal), specialSkill(nullptr), description("")
+		name(_name), active(true), type(CardType::normal), specialSkill(nullptr), description(""), star(0)
 	{}
 	~CardBase() = default;
 	void Instance(Player* player, Player* enemy);
@@ -57,7 +57,8 @@ public:
 		using std::endl;
 		cout << "***DEBUG***\n";
 		cout << "card name: " << name << endl;
-		cout << "cost: " << cost << endl;
+		cout << "card star: " << star << endl;
+		cout << "cost: " << cost[star] << endl;
 		cout << "type: ";
 		if (type == CardType::normal)
 			cout << "normal\n";
@@ -75,10 +76,11 @@ public:
 private:
 	Player* player;
 	Player* enemy;
-	size_t cost;
+	size_t star;
+	std::vector<size_t> cost;
 	CardType type;
 	bool active;
-	std::vector<std::pair<size_t, Skill*>> skillList;
+	std::vector<Skill*> skillList; //<技能列表, <星级，技能>
 	Skill* specialSkill;
 	std::string name;
 	std::string description;
@@ -91,16 +93,16 @@ inline void CardBase::Instance(Player* player, Player* enemy)
 		specialSkill->SetTarget(player, enemy);
 	for (auto& e : skillList)
 	{
-		e.second->SetTarget(player, enemy);
+		e->SetTarget(player, enemy);
 	}
 }
 bool CardBase::isPlayCard(size_t cost)
 {
-	return active && cost >= this->cost;
+	return active && cost >= this->cost[star];
 }
 void CardBase::ChangeCost(int num)
 {
-	cost = cost > -num ? cost + num : 0;
+	cost[star] = cost[star] > -num ? cost[star] + num : 0;
 }
 inline void CardBase::Play()
 {
@@ -109,14 +111,14 @@ inline void CardBase::Play()
 #if _DEBUG
 		std::cout << "使用了特殊技\n";
 #endif
-		specialSkill->Play(1);
+		specialSkill->Play(star);
 	}
 	for (auto& e : skillList)
 	{
 #if _DEBUG
 		std::cout << "使用了普通技\n";
 #endif
-		e.second->Play(e.first);
+		e->Play(star);
 	}
 }
 class CardFactory
@@ -220,7 +222,7 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 			for (int i = 0; i < 3; i++)
 			{
 				file >> info;
-				card.cost = stoi(info);
+				card.cost.push_back(stoi(info));
 			}
 			is_cost = true;
 		}
@@ -236,7 +238,7 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 				else
 					skill->SetDirectDamage(stoi(info));
 			}
-			card.skillList.push_back(std::pair<size_t, Skill*>(0, skill));
+			card.skillList.push_back(skill);
 			is_skill = true;
 		}
 		else if (str == "buff_num:")
@@ -279,7 +281,7 @@ inline bool CardLoader::Loading(CardBase& card, std::fstream& file)
 					}
 				}
 				is_skill = true;
-				card.skillList.push_back(std::pair<size_t, Skill*>(0, buff));
+				card.skillList.push_back(buff);
 			}
 		}
 		else if (str == "sp_id:")
