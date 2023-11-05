@@ -27,7 +27,8 @@ class CardBase
 	friend class CardLoader;
 public:
 	CardBase(std::string _name) :
-		name(_name), active(true), type(CardType::normal), specialSkill(nullptr), description(""), star(0)
+		name(_name), active(true), type(CardType::normal), specialSkill(nullptr), 
+		description(""), star(0), player(nullptr), enemy(nullptr)
 	{}
 	~CardBase() = default;
 	void Instance(Player* player, Player* enemy);

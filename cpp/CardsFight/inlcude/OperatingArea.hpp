@@ -21,7 +21,7 @@ class DiscardException : public std::exception
 class DiscardArea
 {
 public:
-	DiscardArea(size_t master_num) :count(0), masterNum(master_num), isMasterCardUsed(false)
+	DiscardArea(int master_num) :count(0), masterNum(master_num), isMasterCardUsed(false)
 	{}
 	~DiscardArea() = default;
 

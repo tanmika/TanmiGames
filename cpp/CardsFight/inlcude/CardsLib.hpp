@@ -12,7 +12,7 @@ using std::pair;
 class CardLib
 {
 public:
-	CardLib(vector<CardBase>&& _cards)
+	CardLib(vector<CardBase>&& _cards):pileCardsNum(0), leftCardsNum(0)
 	{
 		for (auto&& e : _cards)
 		{
@@ -43,7 +43,7 @@ private:
 	size_t pileCardsNum;//<ÅÆ¿âÉÏÏÞ(Êµ¼ÊÐè4±¶)
 	vector<pair<CardBase, bool>> cards;
 	vector<pair<CardBase*, int>> cardPile;
-	int leftCardsNum = 0;//<ÅÆ¿âÊ£ÓàÅÆÊý
+	int leftCardsNum;//<ÅÆ¿âÊ£ÓàÅÆÊý
 };
 
 inline void CardLib::Instance(size_t num)
