@@ -50,6 +50,15 @@ public:
 	{
 		return active;
 	}
+	size_t GetStar()const
+	{
+		return star;
+	}
+	void RiseStar()
+	{
+		star = std::min(2, (int)star + 1);
+	}
+	CardBase* GetCopy();
 #if _DEBUG
 	void DebugPrint()
 	{
@@ -80,7 +89,7 @@ private:
 	std::vector<size_t> cost;
 	CardType type;
 	bool active;
-	std::vector<Skill*> skillList; //<技能列表, <星级，技能>
+	std::vector<Skill*> skillList; //<技能列表
 	Skill* specialSkill;
 	std::string name;
 	std::string description;
@@ -103,6 +112,21 @@ bool CardBase::isPlayCard(size_t cost)
 void CardBase::ChangeCost(int num)
 {
 	cost[star] = cost[star] > -num ? cost[star] + num : 0;
+}
+inline CardBase* CardBase::GetCopy()
+{
+	CardBase* card = new CardBase(name);
+	card->active = active;
+	card->type = type;
+	card->star = star;
+	card->cost = cost;
+	card->description = description;
+	card->specialSkill = specialSkill;
+	for (auto e : skillList)
+	{
+		card->skillList.push_back(e);
+	}
+	return card;
 }
 inline void CardBase::Play()
 {

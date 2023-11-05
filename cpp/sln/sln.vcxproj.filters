@@ -30,6 +30,9 @@
     <ClInclude Include="..\CardsFight\inlcude\CardsLib.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="..\CardsFight\inlcude\OperatingArea.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\CardsFight\src\Main.cpp">

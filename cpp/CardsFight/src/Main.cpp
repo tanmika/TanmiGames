@@ -6,7 +6,7 @@
  * @date   October 2023
  *********************************************************************/
 #include "../inlcude/CardsLib.hpp"
-
+#include "../inlcude/OperatingArea.hpp"
 int main()
 {
 	auto cards1 = CardLoader::Instance()
@@ -25,6 +25,9 @@ int main()
 	{
 		std::cout << e.first->GetName() << "剩余" << e.second << "张\n";
 	}
+	std::cout << "//-----------手牌区-----------//\n";
+	DiscardArea discardArea(10);
+	OperatingArea operatingArea(8, 4);
 	std::cout << "//------------玩家-----------//\n";
 	Player p1(10000, 100);
 	Player p2(10000, 100);
@@ -39,12 +42,22 @@ int main()
 		std::vector<CardBase*> cardsListening;
 		if (!lib1.DebugLicensing(2, cardsListening, id))
 			return 0;
-		std::cout<<cardsListening[0]->GetName()<<std::endl;
-		cardsListening[0]->Instance(&p1, &p2);
-		cardsListening[0]->Play();
-		std::cout << cardsListening[1]->GetName() << std::endl;
-		cardsListening[1]->Instance(&p1, &p2);
-		cardsListening[1]->Play();
+		for(auto& e:cardsListening)
+			if (!operatingArea.AddCardsFromPile(e))
+			{
+				std::cout << "手牌区已满\n";
+			}
+		operatingArea.AddBattleCards(0, 0);
+		operatingArea.AddBattleCards(0, 1);
+		auto battleCard = operatingArea.GetBattleCardsPtr();
+		std::list<CardBase*>::iterator it = battleCard->begin();
+		std::cout<<(*it)->GetName() << std::endl;
+		(*it)->Instance(&p1, &p2);
+		(*it)->Play();
+		it++;
+		std::cout << (*it)->GetName() << std::endl;
+		(*it)->Instance(&p1, &p2);
+		(*it)->Play();
 		p1.DebugShowBuff();
 	}
 	std::cout << "player1 hp:" << p1.GetHp() << std::endl;

@@ -5,7 +5,7 @@
  * @author tanmika
  * @date   November 2023
  *********************************************************************/
-
+#pragma once
 #include "Cards.hpp"
 
 using std::pair;
@@ -25,8 +25,8 @@ public:
 	/**
 	 * @attention 不进行合法性检查, 仅可在局中调用
 	 */
-	void addCards(vector<CardBase*> idxs);
-	void removeCard(size_t idx);
+	void AddCards(vector<CardBase*> idxs);
+	void RemoveCard(size_t idx);
 	void Shuffle();
 	bool Licensing(size_t num, vector<CardBase*>& cards);
 #if _DEBUG
@@ -68,13 +68,14 @@ bool CardLib::addCard(size_t idx)
 	return true;
 }
 
-inline void CardLib::addCards(vector<CardBase*> idxs)
+inline void CardLib::AddCards(vector<CardBase*> idxs)
 {
+	// 需修改
 	for (auto e : idxs)
 	{
 		for (auto& t : cardPile)
 		{
-			if (t.first == e)
+			if (t.first->GetName() == e->GetName())
 			{
 				t.second++;
 				leftCardsNum++;
@@ -84,7 +85,7 @@ inline void CardLib::addCards(vector<CardBase*> idxs)
 	}
 }
 
-inline void CardLib::removeCard(size_t idx)
+inline void CardLib::RemoveCard(size_t idx)
 {
 	leftCardsNum -= 4;
 	if (idx == 0 && cardPile.size() == 1) cardPile.pop_back();
@@ -174,7 +175,7 @@ inline void CardLib::ClearPile()
 {
 	while (!EmptyPile())
 	{
-		removeCard(cardPile.size() - 1);
+		RemoveCard(cardPile.size() - 1);
 	}
 	leftCardsNum = 0;
 }
