@@ -18,6 +18,9 @@ class DiscardException : public std::exception
 		return "DiscardArea Error!";
 	}
 };
+/**
+ * @warning 拥有卡牌所有权, 需考虑销毁
+ */
 class DiscardArea
 {
 public:
@@ -34,13 +37,13 @@ public:
 	{
 		if (card == nullptr)
 			throw DiscardException();
-		if (isMasterCardUsed == false && count >= masterNum)
-		{
-			if (card->GetStar() == 2)
-				return false;
-			isMasterCardUsed = true;
-			count -= masterNum;
-		}
+		if (isMasterCardUsed || count < masterNum)
+			return false;
+		if (card->GetStar() == 2)
+			return false;
+		isMasterCardUsed = true;
+		count -= masterNum;
+		return true;
 	}
 	std::vector<CardBase*> GetDiscardCards()
 	{
@@ -49,9 +52,9 @@ public:
 		return c;
 	}
 private:
-	std::vector<CardBase*> cards;
-	size_t count;
-	int masterNum;
+	std::vector<CardBase*> cards; //弃牌区
+	size_t count; //弃牌区总数
+	int masterNum; //获得万能牌所需弃牌数
 	bool isMasterCardUsed;
 };
 
@@ -62,6 +65,9 @@ class OperatingException :public std::exception
 		return "OperatingArea Error!";
 	}
 };
+/**
+ * @warning 拥有卡牌所有权, 需考虑销毁
+ */
 class OperatingArea
 {
 public:
@@ -81,7 +87,7 @@ public:
 		}
 		cards.push_back(card->GetCopy());
 		return true;
-	}
+	} ///< 自留副本
 	bool AddCardsFromBattle(size_t from)
 	{
 		if (from > battleCards.size())
@@ -114,7 +120,7 @@ public:
 		cards.remove(*it);
 		return true;
 	}
-	void DiscardCard(list<CardBase*>* from, size_t idx)
+	void DiscardCardFrom(list<CardBase*>* from, size_t idx)
 	{
 		if (!discardArea)
 		{
@@ -140,6 +146,14 @@ public:
 	std::list<CardBase*>* GetBattleCardsPtr()
 	{
 		return &battleCards;
+	}
+	int GetCardsNum()const
+	{
+		return cards.size();
+	}
+	std::list<CardBase*>* GetCardsPtr()
+	{
+		return &cards;
 	}
 private:
 	int maxCardsNum;//<手牌上限

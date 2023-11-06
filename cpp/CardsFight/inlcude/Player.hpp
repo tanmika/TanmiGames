@@ -195,6 +195,7 @@ public:
 	void CalDamageReduction();
 	void Round(); // 回合结算发生于一方进入回合时
 public:
+	void ResetState(int hp = 0, int atk = 0); ///< 重置状态
 	bool isAlive()const;
 	int GetTotalHp(int change, bool revover = true); // 计算并返回当前生命值上限
 	void Heal(int);
@@ -306,6 +307,33 @@ inline void Player::Round()
 	Heal(buffs[Buff::Healing].Sum() * 50);
 	buffList.Round();
 	GetTotalHp((abundance - buffs[Buff::Abundance].Sum()) * 25);
+}
+
+inline void Player::ResetState(int hp, int atk)
+{
+	if (hp == 0 || atk == 0)
+	{
+		total_hp = base_hp;
+		total_attack = base_attack;
+		hp = total_hp;
+	}
+	else
+	{
+		total_hp = base_hp = hp;
+		total_attack = base_attack = atk;
+		hp = total_hp;
+	}
+	shield = 0;
+	damageIncrease = 0;
+	damageReduction = 0;
+	buffs.clear();
+	buffs.resize(Buff::BuffNum, BuffBase());
+	buffList.Ins(5, buffs);
+	debuffs.clear();
+	debuffs.resize(Debuff::DebuffNum, BuffBase());
+	debuffList.Ins(5, debuffs);
+	effects.clear();
+	effects.resize(Effect::EffectNum, EffectBase());
 }
 
 inline bool Player::isAlive() const

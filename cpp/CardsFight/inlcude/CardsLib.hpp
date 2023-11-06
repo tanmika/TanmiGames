@@ -77,11 +77,15 @@ inline void CardLib::AddCards(vector<CardBase*> idxs)
 		{
 			if (t.first->GetName() == e->GetName())
 			{
-				t.second++;
+				t.second += std::pow(2, e->GetStar());
 				leftCardsNum++;
 				break;
 			}
 		}
+	}
+	for (auto i = 0; i < idxs.size(); i++)
+	{
+		delete idxs[i];
 	}
 }
 
