@@ -7,6 +7,8 @@
  *********************************************************************/
 #pragma once
 
+#include <istream>
+
 #include"Player.hpp"
 #include"OperatingArea.hpp"
 constexpr int MAX_OPERATING_CRAD_NUM = 8; ///< 最大手牌数
@@ -124,19 +126,109 @@ inline void PveGame::Play()
 			ShowCardInfo(card);
 			if (operatingArea.AddCardsFromPile(card))
 				break;
-			cout <<"手牌区已满:\n";
+			cout << "手牌区已满:\n";
 			ShowOperatingArea();
 			auto n = GetInputInRound(
-				"输入序号替换对应卡牌, 输入 -1 舍弃该卡牌", operatingArea.GetCardsNum());
+				"输入序号替换对应卡牌, 输入 -1 舍弃该卡牌", operatingArea.GetCardsNum() - 1);
 			if (n >= 0)
 			{
 				operatingArea.DiscardCardFrom(operatingArea.GetCardsPtr(), n);
 				operatingArea.AddCardsFromPile(card);
+				ShowOperatingArea();
 			}
 		}
 	}
-
 	// 调整卡牌
+	auto mode = GetInputInRound("输入0调整手牌区, 输入1调整对战区, 输入-1完成调整", 1);
+	while (mode != -1)
+	{
+		ShowOperatingArea();
+		if (mode == 0)
+		{
+			auto adjust = GetInputInRound
+			("输入调整序号对, 以-1结束将将卡牌弃置, 重复自身以放入对战区, 以-1开头将结束调整",
+				operatingArea.GetCardsNum() - 1, operatingArea.GetCardsNum() - 1);
+			while (adjust.first != -1)
+			{
+				if (adjust.second == -1)
+				{
+					operatingArea.DiscardCardFrom(operatingArea.GetCardsPtr(), adjust.first);
+				}
+				else if (adjust.first == adjust.second)
+				{
+					operatingArea.AddBattleCards(adjust.first, operatingArea.GetBattleCardsPtr()->size());
+					ShowBattleArea();
+				}
+				else
+				{
+					auto cards = operatingArea.GetCardsPtr();
+					auto temp = cards[adjust.first];
+					cards[adjust.first] = cards[adjust.second];
+					cards[adjust.second] = temp;
+				}
+				ShowOperatingArea();
+				adjust = GetInputInRound
+				("输入调整序号对, 以-1结束将将卡牌弃置, 以-1开头将结束调整",
+					operatingArea.GetCardsNum() - 1, operatingArea.GetCardsNum() - 1);
+			}
+		}
+		else
+		{
+			cout << "输入调整后卡牌序号, 未存在卡牌将撤回至手牌区\n";
+			std::istream is(std::cin.rdbuf());
+			auto pre = operatingArea.GetBattleCardsPtr();
+			std::vector<CardBase*> temp;
+			int idx;
+			int num = 0;
+			while (is >> idx)
+			{
+				if(idx < 0 || idx > pre->size())
+					throw PvePlayException();
+				auto itr = pre->begin();
+				for(int i = 0; i < idx; i++)
+					itr++;
+				if(*itr == nullptr)
+					throw PvePlayException();
+				temp.push_back(*itr);
+				*itr = nullptr;
+				num++;
+			}
+			for (auto e : *pre)
+			{
+				if(e)
+				{
+					if (!operatingArea.AddCardsFromBattle(e))
+					{
+						auto adjust = GetInputInRound
+						("输入调整序号弃置手牌区卡牌, -1弃置本身",
+							operatingArea.GetCardsNum() - 1);
+						ShowCardInfo(e);
+						ShowOperatingArea();
+						if (adjust == -1)
+						{
+							discardArea.AddCard(e);
+						}
+						else
+						{
+							operatingArea.DiscardCardFrom(operatingArea.GetCardsPtr(), adjust);
+							operatingArea.AddCardsFromBattle(e);
+						}
+					}
+
+				}
+			}
+			pre->resize(num);
+			auto itr = pre->begin();
+			for (int i = 0; i < num; i++)
+			{
+				*itr = temp[i];
+			}
+			ShowBattleArea();
+			ShowOperatingArea();
+		}
+		mode = GetInputInRound("输入1调整手牌区, 输入2调整对战区, 输入0完成调整", 2);
+	}
+
 	// 战斗
 	// 回合结束
 }

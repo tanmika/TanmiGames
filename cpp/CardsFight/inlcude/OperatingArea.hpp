@@ -104,6 +104,18 @@ public:
 		battleCards.remove(*it);
 		return true;
 	}
+	bool AddCardsFromBattle(CardBase* card)
+	{
+		if (!card)
+			throw OperatingException();
+		if (cards.size() == maxCardsNum)
+		{
+			std::cerr << "ÊÖÅÆÒÑÂú\n";
+			return false;
+		}
+		cards.push_back(card);
+		return true;
+	}
 	bool AddBattleCards(size_t from, size_t to)
 	{
 		if (from > cards.size())
